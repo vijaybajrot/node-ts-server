@@ -4,7 +4,7 @@ import * as bodyParser from "body-parser";
 import { log } from "@app/utils";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { User } from "./entities/User";
+import { User } from "./entity/User";
 
 const app: Express = express();
 const { PORT = 3000 } = process.env;
@@ -14,10 +14,11 @@ app.use(bodyParser.json());
 
 createConnection()
   .then(connection => {
-    console.log("DB Connected", JSON.stringify(connection));
+    console.log("DB Connected");
   })
   .catch(err => {
-    console.log("DB Not Connected", err);
+  	throw err;
+    console.log("DB Not Connected");
     process.exit(0);
   });
 

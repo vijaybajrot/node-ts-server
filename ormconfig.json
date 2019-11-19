@@ -3,9 +3,12 @@
   "host": "localhost",
   "port": 3306,
   "username": "root",
-  "password": "",
+  "password": "root",
   "database": "typeorm",
-  "entities": ["build/entities/*.js"],
+  "entities": ["dist/entity/**/*.js"],
   "logging": true,
-  "synchronize": true
+  "synchronize": true,
+  "cli": {
+    "entitiesDir": "dist/entity"
+  }
 }
