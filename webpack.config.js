@@ -16,17 +16,29 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.ts|js$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: false,
-              experimentalWatchApi: true
-            }
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/typescript"],
+            plugins: [
+              "@babel/proposal-object-rest-spread",
+              [
+                require("@babel/plugin-proposal-decorators").default,
+                {
+                  legacy: true
+                }
+              ],
+              [
+                "@babel/plugin-proposal-class-properties",
+                {
+                  loose: true
+                }
+              ]
+            ]
           }
-        ]
+        }
       }
     ]
   },
