@@ -2,8 +2,9 @@ import "reflect-metadata";
 import express from "express";
 import { Express, Request, Response } from "express";
 import * as bodyParser from "body-parser";
-import { log } from "./utils";
 import { createConnection } from "typeorm";
+
+import { log } from "./utils";
 import { User } from "./entity/User";
 
 const app: Express = express();
