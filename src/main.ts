@@ -1,39 +1,30 @@
-import "reflect-metadata";
-import express from "express";
-import { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import * as bodyParser from "body-parser";
 import { createConnection } from "typeorm";
 
-import { log } from "./utils";
-import { User } from "./entity/User";
+import "reflect-metadata";
 
-const app: Express = express();
+import UserRoutes from "./routes/users";
+
 const { PORT = 3000 } = process.env;
 
-log("another message");
-app.use(bodyParser.json());
+async function main() {
+  const app: Express = express();
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
-createConnection()
-  .then(async connection => {
-    console.log("DB Connected");
-    const user = new User();
-    user.firstName = "Timber";
-    user.lastName = "Saw";
-    user.age = 25;
-    await user.save();
-  })
-  .catch(err => {
-    throw err;
+  try {
+    await createConnection();
+  } catch (error) {
     console.log("DB Not Connected");
     process.exit(0);
-  });
+  }
 
-app.get("/", (req: Request, res: Response) => {
-  res.send({
-    message: "hello world"
-  });
-});
+  app.use("/users", UserRoutes);
 
-app.listen(PORT, () => {
-  console.log("server started at http://localhost:" + PORT);
-});
+  app.listen(PORT, () => {
+    console.log("server started at http://localhost:" + PORT);
+  });
+}
+
+main();
