@@ -4,6 +4,7 @@ import { validate } from "class-validator";
 
 import { User } from "./../entity/User";
 import { BaseController } from "./BaseController";
+import { mapErrors } from "../utils";
 
 export class UserController extends BaseController {
   static async getUsers(req: Request, res: Response): Promise<Response> {
@@ -30,10 +31,7 @@ export class UserController extends BaseController {
       return res.status(422).json({
         ok: false,
         message: "Validation failed",
-        errors: errors.map(err => ({
-          path: err.property,
-          messages: err.constraints
-        }))
+        errors: mapErrors(errors)
       });
     }
 
