@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
-import { IsInt, Length, IsAlpha } from "class-validator";
+import { IsInt, Length, IsAlpha, IsEmail } from "class-validator";
+import bcrypt from "bcryptjs";
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,7 +16,39 @@ export class User extends BaseEntity {
   lastName: string;
 
   @Column()
-  @Length(2)
-  @IsInt()
-  age: number;
+  @IsEmail()
+  email: string;
+
+  @Column()
+  @Length(6)
+  password: string;
+
+  @Column()
+  status: number;
+
+  async bcryptPassword(password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(hash);
+          }
+        });
+      });
+    });
+  }
+
+  async verifyPassword(password: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, this.password, function(err, res) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
 }

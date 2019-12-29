@@ -27,7 +27,7 @@ export class UserController extends BaseController {
     const user = User.create(data);
 
     let errors = await validate(user);
-    if (errors) {
+    if (errors.length > 0) {
       return res.status(422).json({
         ok: false,
         message: "Validation failed",
@@ -36,6 +36,7 @@ export class UserController extends BaseController {
     }
 
     try {
+      user.password = await user.bcryptPassword(user.password);
       await user.save();
     } catch (error) {
       return res.status(400).json({
