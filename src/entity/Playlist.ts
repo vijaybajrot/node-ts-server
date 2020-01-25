@@ -6,7 +6,8 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   OneToMany,
-  OneToOne
+  OneToOne,
+  JoinColumn
 } from "typeorm";
 import { Length } from "class-validator";
 
@@ -38,6 +39,7 @@ export class Playlist extends BaseEntity {
   )
   songs: Song[];
 
-  // @OneToOne(type => User, user => user.playlist);
-  // author: User;
+  @OneToOne(() => User)
+  @JoinColumn()
+  author: User;
 }

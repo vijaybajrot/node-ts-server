@@ -2,6 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 import { IsInt, Length, IsAlpha, IsEmail } from "class-validator";
 import bcrypt from "bcryptjs";
 
+export enum UserType {
+  AdminUser,
+  Author
+}
+
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -22,6 +27,9 @@ export class User extends BaseEntity {
   @Column()
   @Length(6)
   password: string;
+
+  @Column({ default: UserType.AdminUser })
+  userType: UserType;
 
   @Column()
   status: number;

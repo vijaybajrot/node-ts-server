@@ -1,12 +1,18 @@
-import { Playlist } from "./Playlist";
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-  ManyToOne
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import { IsInt, Length } from "class-validator";
+import { User } from "./User";
+import { Playlist } from "./Playlist";
+import { Tag } from "./Tag";
 
 @Entity()
 export class Song extends BaseEntity {
@@ -31,4 +37,12 @@ export class Song extends BaseEntity {
     playlist => playlist.songs
   )
   playlist: Playlist;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  author: User;
+
+  @ManyToMany(type => Tag)
+  @JoinTable({ name: "song_tags" })
+  tags: Tag[];
 }
