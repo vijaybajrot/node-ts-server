@@ -1,4 +1,4 @@
-import { getManager } from "typeorm";
+import { getManager, QueryFailedError } from "typeorm";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import moment from "moment";
