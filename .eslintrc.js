@@ -1,19 +1,25 @@
 "use strict";
 
 module.exports = {
-  root: true,
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
     sourceType: "module" // Allows for the use of imports
   },
+  env: {
+    commonjs: true,
+    es6: true,
+    node: true
+  },
+
   extends: [
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   plugins: ["@typescript-eslint"],
   rules: {

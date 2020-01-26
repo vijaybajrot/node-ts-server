@@ -1,12 +1,13 @@
-import { getManager, QueryFailedError } from "typeorm";
+import { getManager } from "typeorm";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import moment from "moment";
 
+import { mapErrors } from "../utils";
+
+import { BaseController } from "./BaseController";
 import { User } from "./../entity/User";
 import { IssueToken, TokenType } from "./../entity/IssueToken";
-import { BaseController } from "./BaseController";
-import { mapErrors } from "../utils";
 
 const ACCESS_TOKEN_SECRET = "3291a301e78049e077246cd8a89d08bf";
 const REFRESH_TOKEN_SECRET = "8f1e9faabb6818e90ad8f142c6751fad";
@@ -15,7 +16,7 @@ export class AuthController extends BaseController {
   static async login(req: Request, res: Response): Promise<Response> {
     const data = req.body;
 
-    let errors: any[] = [];
+    const errors: any[] = [];
     if (!data.username) {
       errors.push({
         path: "email",
@@ -70,7 +71,6 @@ export class AuthController extends BaseController {
         });
       }
     } catch (error) {
-      console.log(error);
       return res.status(400).json({
         ok: false,
         message: "Bad Request"
