@@ -1,8 +1,9 @@
 import moment from "moment";
-import { User } from "./../entity/User";
-import { IssueToken, TokenType } from "./../entity/IssueToken";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
+import { User } from "../entity/User";
+import { IssueToken, TokenType } from "../entity/IssueToken";
 
 const ACCESS_TOKEN_SECRET = "3291a301e78049e077246cd8a89d08bf";
 const REFRESH_TOKEN_SECRET = "8f1e9faabb6818e90ad8f142c6751fad";
@@ -35,7 +36,7 @@ export default async function(req: Request, res: Response, next: any) {
   }
 
   try {
-    let token: any = await verifyToken(accessToken);
+    const token: any = await verifyToken(accessToken);
     if (!token) {
       throw new Error("Token invaild");
     }
@@ -54,8 +55,9 @@ export default async function(req: Request, res: Response, next: any) {
       .execute();
     req.params.user = user;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error);
-    return res.sendStatus(403);
+    return res.sendStatus(401);
   }
 
   next();

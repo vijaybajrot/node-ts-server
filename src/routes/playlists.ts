@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { PlaylistController } from "../controllers/PlaylistController";
 
 const router = Router();

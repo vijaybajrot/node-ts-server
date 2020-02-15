@@ -1,5 +1,3 @@
-import { User } from "./User";
-import { Song } from "./Song";
 import {
   Entity,
   Column,
@@ -11,9 +9,17 @@ import {
 } from "typeorm";
 import { Length } from "class-validator";
 
+import { User } from "./User";
+import { Song } from "./Song";
+
 export enum PlaylistType {
   Albumb = 1,
   Collection = 2
+}
+
+export enum PlaylistStatus {
+  Active = 1,
+  Inactive = 2
 }
 
 @Entity()
@@ -25,12 +31,10 @@ export class Playlist extends BaseEntity {
   @Length(1)
   title: string;
 
-  @Column()
-  @Length(1)
+  @Column({ default: PlaylistStatus.Active })
   status: number;
 
-  @Column()
-  @Length(1)
+  @Column({ default: PlaylistType.Albumb })
   type: PlaylistType;
 
   @OneToMany(
@@ -38,6 +42,9 @@ export class Playlist extends BaseEntity {
     song => song.playlist
   )
   songs: Song[];
+
+  @Column({ nullable: true })
+  authorId: number;
 
   @OneToOne(() => User)
   @JoinColumn()
