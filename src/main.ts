@@ -1,13 +1,12 @@
+require("dotenv").config();
+import "reflect-metadata";
 import express, { Express } from "express";
 import * as bodyParser from "body-parser";
 import { createConnection } from "typeorm";
 import cors from "cors";
+import { useExpressServer } from "routing-controllers";
 
-import "reflect-metadata";
-
-import UserRoutes from "./routes/users";
-import AuthRoutes from "./routes/auth";
-import PlaylistRoutes from "./routes/playlists";
+import { isProduction } from "./utils";
 
 const { PORT = 3000 } = process.env;
 
@@ -20,15 +19,19 @@ async function main() {
   try {
     await createConnection();
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log("DB Not Connected");
     process.exit(0);
   }
 
-  app.use("/auth", AuthRoutes);
-  app.use("/users", UserRoutes);
-  app.use("/playlists", PlaylistRoutes);
+  useExpressServer(app, {
+    controllers: isProduction()
+      ? [__dirname + "/controllers/*.js"]
+      : [__dirname + "/controllers/*.ts"]
+  });
 
   app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
     console.log("server started at http://localhost:" + PORT);
   });
 }

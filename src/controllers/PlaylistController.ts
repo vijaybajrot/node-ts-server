@@ -1,17 +1,23 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { validate } from "class-validator";
+import { Controller, Get, Post, Req, Res, Param } from "routing-controllers";
 
 import { mapErrors } from "../utils";
 import { Playlist } from "../entity/Playlist";
 
 import { BaseController } from "./BaseController";
 
+@Controller("/playlists")
 export class PlaylistController extends BaseController {
-  static async getPlaylists(req: Request, res: Response): Promise<Response> {
+  @Get()
+  async getPlaylists(
+    @Req() req: Request,
+    @Res() res: Response
+  ): Promise<Response> {
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const query = getManager().createQueryBuilder(Playlist, "playlist");
-    const playlists = await super.createPagination(query, {
+    const playlists = await this.buildPagination(query, {
       page,
       perPage: 25
     });
@@ -19,14 +25,23 @@ export class PlaylistController extends BaseController {
     return res.status(200).json(playlists);
   }
 
-  static async getPlaylistById(req: Request, res: Response): Promise<Response> {
+  @Get("/:id")
+  async getPlaylistById(
+    @Param("id") id: number,
+    @Req() req: Request,
+    @Res() res: Response
+  ): Promise<Response> {
     const playlist = await Playlist.findOne<Playlist>({
-      id: parseInt(req.params.id)
+      id
     });
     return res.status(200).json(playlist);
   }
 
-  static async createPlaylist(req: Request, res: Response): Promise<Response> {
+  @Post()
+  async createPlaylist(
+    @Req() req: Request,
+    @Res() res: Response
+  ): Promise<Response> {
     const data = req.body;
     const playlist = Playlist.create(data);
 
